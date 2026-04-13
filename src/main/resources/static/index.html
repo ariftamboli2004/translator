@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Language Translator</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #2d7a2d;
+            font-weight: bold;
+            min-height: 24px;
+        }
+
+        label {
+            font-size: 13px;
+            color: #555;
+            display: block;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>🌐 Translator</h2>
+
+        <label>Enter Text</label>
+        <input id="text" placeholder="Type something...">
+
+        <label>From Language</label>
+        <select id="from">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="mr">Marathi</option>
+        </select>
+
+        <label>To Language</label>
+        <select id="to">
+            <option value="hi">Hindi</option>
+            <option value="en">English</option>
+            <option value="mr">Marathi</option>
+        </select>
+
+        <button id="btn">Translate</button>
+
+        <div id="result"></div>
+
+    </div>
+
+    <script>
+        document.getElementById("btn").addEventListener("click", function () {
+
+            let text = document.getElementById("text").value;
+            let from = document.getElementById("from").value;
+            let to = document.getElementById("to").value;
+
+            if (!text) {
+                alert("Please enter text");
+                return;
+            }
+
+            document.getElementById("result").innerText = "Translating...";
+
+            fetch("/translate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text, from, to })
+            })
+            .then(res => res.text())
+            .then(data => {
+                document.getElementById("result").innerText = data;
+            })
+            .catch(err => {
+                console.log(err);
+                document.getElementById("result").innerText = "Error occurred";
+            });
+        });
+    </script>
+
+</body>
+</html>
